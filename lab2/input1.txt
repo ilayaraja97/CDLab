@@ -1,0 +1,3 @@
+S>SAB|bB|Sa
+A>c
+B>b
