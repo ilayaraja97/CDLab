@@ -23,6 +23,20 @@
         return os << "}";
     }
 
+///     cout<<stack;
+    template < typename T >
+    ostream &operator << ( ostream & os, const stack< T > &v )
+    {
+        os << "[";
+        stack< T > it=v;
+        while(!it.empty())
+        {
+            os<<it.top()<<" ";
+            it.pop();
+        }
+        return os << "]";
+    }
+
     ///     cout<<set;
     template < typename T >
     ostream &operator << ( ostream & os, const set< T > &v )

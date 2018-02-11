@@ -79,12 +79,12 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                         g[curr].insert(first[next].begin(),
                                 first[next].end());
                         
-                        debug(curr);
+                        //debug(curr);
                         while(first[next].find("@")!=first[next].end())
                         {
-                            debug(first[next]);
-                            debug(next);
-                            debug(s);
+                            //debug(first[next]);
+                            //debug(next);
+                            //debug(s);
                             if(j+_count+1<s.length())
                                 next=string()+s[j+_count+1];
                             else
@@ -97,7 +97,7 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                             _count++;
                         }
                         g[curr].erase("@");
-                        debug(g[curr]);
+                        //debug(g[curr]);
                     }
                 }
                 if(!isTerminal(s[j])||followAdd)
