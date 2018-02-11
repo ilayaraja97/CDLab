@@ -3,6 +3,11 @@ using namespace std;
 #include "utilities.h"
 //globals
 map< string,set<string> > first;
+inline bool isTerminal(char a)
+{
+    return !isupper(a);
+}
+
 map< string,set<string> > &getFirst(map< string,vector<string> > prods) 
 {
     static map< string,set<string> > f;
@@ -16,7 +21,7 @@ map< string,set<string> > &getFirst(map< string,vector<string> > prods)
             for(uint i=0;i<j.size();i++,l++)
             {
                 string firstChar=j[i].substr(0,1);
-                if(islower(firstChar[0])||j[i]=="@")//rule 1&4
+                if(isTerminal(firstChar[0])||j[i]=="@")//rule 1&4
                 {
                     f[it->first].insert(firstChar);
                     j.erase(j.begin()+i--);
@@ -46,11 +51,14 @@ map< string,set<string> > &getFirst(map< string,vector<string> > prods)
     }
     return f;
 }
+
 map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
 {
     static map< string,set<string> > g;
     g.clear();
     g["S"].insert("$");
+    bool followAdd=false;
+    vector<string> pending;
     for(auto it=prods.begin();it!=prods.end();it++)
     {
         for(uint i=0;i<it->second.size();i++)
@@ -58,9 +66,9 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
             string s=it->second[i];
             for(uint j=0;j<s.length()-1;j++)
             {
-                if(isupper(s[j]))
+                if(!isTerminal(s[j]))
                 {
-                    if(islower(s[j+1]))
+                    if(isTerminal(s[j+1]))
                     {
                         g[string()+s[j]].insert(string()+s[j+1]);
                     }
@@ -71,16 +79,17 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                         g[curr].insert(first[next].begin(),
                                 first[next].end());
                         
-                        //debug(curr);
+                        debug(curr);
                         while(first[next].find("@")!=first[next].end())
                         {
-                            //debug(*first[next].find("@"));
-                            //debug(next);
-                            if(j+_count+1<s.size())
+                            debug(first[next]);
+                            debug(next);
+                            debug(s);
+                            if(j+_count+1<s.length())
                                 next=string()+s[j+_count+1];
                             else
                             {    
-                                g[curr].insert("$");
+                                followAdd=true;
                                 break;
                             }
                             g[curr].insert(first[next].begin(),
@@ -88,9 +97,23 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                             _count++;
                         }
                         g[curr].erase("@");
+                        debug(g[curr]);
+                    }
+                }
+                if(!isTerminal(s[j])||followAdd)
+                {
+                    if(g.find(it->first)!=g.end())
+                    {
+                        g[string()+s[j]].insert(g[it->first].begin(),
+                                g[it->first].end());
+                    }
+                    else
+                    {
+                        pending.push_back(string()+s[j]);
                     }
                 }
             }
+            
         }
     }
     for(auto it=prods.begin();it!=prods.end();it++)
@@ -98,7 +121,7 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
         for(uint i=0;i<it->second.size();i++)
         {
             string s=it->second[i];
-            if(isupper(s[s.length()-1]))
+            if(!isTerminal(s[s.length()-1]))
             {
                 g[string()+s[s.length()-1]].insert(
                     g[it->first].begin(),g[it->first].end());
@@ -107,6 +130,7 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
     }
     return g;
 }
+
 int main()
 {
     //@ is epsilon
