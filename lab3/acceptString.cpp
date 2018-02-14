@@ -194,7 +194,7 @@ map< string, map<string,string> > &getLLTable(map< string,vector<string> > &prod
     return l;
 }
 
-map< string,set<string> > &getFirst(map< string,vector<string> > prods) 
+map< string,set<string> > &getFirst(map< string,vector<string> > prods)
 {
     static map< string,set<string> > f;
     f.clear();
@@ -265,7 +265,7 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                         int _count=0;
                         g[curr].insert(first[next].begin(),
                                 first[next].end());
-                        
+
                         //debug(curr);
                         while(first[next].find("@")!=first[next].end())
                         {
@@ -275,7 +275,7 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                             if(j+_count+1<s.length())
                                 next=string()+s[j+_count+1];
                             else
-                            {    
+                            {
                                 followAdd=true;
                                 break;
                             }
@@ -300,7 +300,7 @@ map< string,set<string> > &getFollow(map< string,vector<string> > &prods)
                     }
                 }
             }
-            
+
         }
     }
     for(auto it=prods.begin();it!=prods.end();it++)
